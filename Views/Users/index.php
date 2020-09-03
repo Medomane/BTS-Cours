@@ -20,7 +20,7 @@
 }
 
 section {
-    padding: 60px 0;
+    padding: 10px 0;
 }
 
 section .section-title {
@@ -95,26 +95,13 @@ section .section-title {
                             <div class="frontside">
                                 <div class="card">
                                     <div class="card-body text-center">
-                                        <p><img class=" img-fluid" src="<?=WEBROOT."img/".$v["gender"].".png" ?>" alt="card image"></p>
-                                        <h4 class="card-title"><?= $v["email"] ?></h4>
+                                        <p><img class=" img-fluid" src="<?= file_exists(WEBROOT."img/avatars/".$v["id"].".png")?
+                                            WEBROOT."img/avatars/".$v["id"].".png":
+                                            WEBROOT."img/".$v["gender"].".png" ?>" alt="card image"></p>
+                                        <h4 class="card-title"><a href="<?= ROOT.'users/profile/'.$v['id'] ?>" style="text-decoration: none;color:unset"><?= $v["firstName"]." ".$v["lastName"] ?></a></h4>
                                         <p class="card-text">
-                                            <?php if($type == "student"){ ?>
-                                                <?= $v["firstName"]." ".$v["lastName"]."</br><b>
-                                                Register</b> : ".$v["registredAt"]."</br><b>
-                                                Semester</b> : ".$v["semester"]."</br><b>
-                                                Branch</b> : ".explode('-',$v["branch"])[0]."</br><b>
-                                                Establishment</b> : ".str_replace("BTS","",$v["establishment"]) ?>
-                                            <?php }else{ ?>
-                                                <?= $v["firstName"]." ".$v["lastName"]."</br><b>
-                                                Register</b> : ".$v["registredAt"]."</br><b>
-                                                Establishment</b> : ".str_replace("BTS","",$v["establishment"]) ?>
-                                            <?php } ?>
+                                        <?= $v["establishment"]?>
                                         </p>
-                                        <?php if($type == "professor"){ ?>
-                                            <div>
-                                                <div class="btn btn-primary btn-sm" data-toggle="modal" data-target="#<?= 'user_'.$v["id"] ?>">Teachs <?= count($v["modules"])." module".(count($v["modules"])>1?"s":"") ?></div>
-                                            </div>
-                                        <?php } ?>
                                         <?php if(AuthUser::IsAdministrator()){ ?>
                                             </br>
                                             <div>

@@ -12,7 +12,6 @@ require(DIR_ROOT . "Core/AuthUser.php");
 require(DIR_ROOT . "Config/conf.php");
 require(DIR_ROOT . "Core/Model.php");
 require(DIR_ROOT . "Core/Controller.php");
-require(DIR_ROOT . "Core/Authentication.php");
 require(DIR_ROOT . "Core/Notify.php");
 require(DIR_ROOT . "Core/Form.php");
 

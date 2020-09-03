@@ -1,35 +1,19 @@
-<form method="POST" style="margin:auto;max-width: 400px" id="form" enctype="multipart/form-data">
+<form method="POST" id="form" style="height:100% !important;max-width:400px;margin:auto;" enctype="multipart/form-data">
     <div style="max-width: 200px;max-height:200px;" class="m-auto">
         <img src='<?=WEBROOT."img/upload.png" ?>' alt="users" class="w-100 h-100">
     </div>
-    <div style="max-width: 400px;margin:auto;"><?= Notify::getHTML(); ?></div>
+    <div style="width:100%;margin:auto;"><?= Notify::getHTML(); ?></div>
     <div class="form-group">
-        <label for="establishment">Establishment</label>
-        <select name="establishment" required class="form-control" id="establishment" required>
-            <option value="0"></option>
-            <?php foreach($establishments as $k => $v) : ?>
-                <option value="<?= $v["id"] ?>"><?= $v["name"] ?></option>
-            <?php endforeach ?>
+        <label for="branch">Branch</label>
+        <select name="branch" id="branch" required style="width:100%;">
+            <?php foreach($branchs as $k=>$v){ ?>
+            <option value="<?= $v["id"] ?>"><?= $v["name"] ?></option>
+            <?php } ?>
         </select>
     </div>
     <div class="form-group">
-        <label for="branch">Branchs</label>
-        <select name="branch" class="form-control" id="branch" required>
-            
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="semester">Semesters</label>
-        <select name="semester" class="form-control" id="semester" required>
-            <option value="0"></option>
-            <?php foreach($semesters as $k => $v) : ?>
-                <option value="<?= $v["id"] ?>"><?= $v["semester"] ?></option>
-            <?php endforeach ?>
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="module">Modules</label>
-        <select name="module" class="form-control" id="module" required>
+        <label for="module">Module by semester</label>
+        <select name="module" id="module" required style="width:100%;">
             
         </select>
     </div>
@@ -44,49 +28,52 @@
 </form>
 <script>
     $(function(){
-        $(".custom-file").parent("div").hide();
-        $("#establishment").change(function(){
-            var establishmentId = $(this).children("option:selected").val();
-            $("#branch").html(null);
-            if(parseInt(establishmentId) > 0) {
-                $.get('<?= ROOT."branchs/jsonBranchsByEstablishment/" ?>'+establishmentId, function(data, status){
-                    if(status == "success"){
-                        let str = "<option value='0'></option>";
-                        $.each(data,function(i,e){
-                            str += "<option value='"+e.id+"'>"+e.Branch+"</option>"
+        $('#branch').multipleSelect({
+            filter: true,
+            filterGroup: true,
+            onClick: function (view) {
+                if(view.selected === true) refreshModules();
+            },
+        });
+        refreshModules();
+        function refreshModules(){
+            let v = parseInt($('#branch').multipleSelect('getSelects')[0]);
+            if(v<=0) return ;
+            $select = $("#module");
+            $select.multipleSelect('destroy');
+            $select.html(null);
+            $select.multipleSelect({
+                filter: true,
+                filterGroup: true
+            });
+            $.get('<?= ROOT."modules/jsonModulesByBranch/" ?>'+v,function(data,status){
+                if(status === "success"){
+                    var x = {};
+                    for (var i = 0; i < data.length; ++i) {
+                        var obj = data[i];
+                        let key = obj.module;
+                        if (x[key] === undefined) x[key] = {name:key,value:[]};
+                        let tmp = data.filter(function(e){
+                            return e.module_id === obj.module_id; 
                         });
-                        $("#branch").html(str);
+                        x[key].value.push(tmp);
                     }
-                });
-            }
-        });
-        $("#branch").change(function(){
-            getModules();
-        });
-        $("#semester").change(function(){
-            getModules();
-        });
-        $("#module").change(function(){
-            var selected = $(this).children("option:selected").val();
-            if(parseInt(selected) > 0) $(".custom-file").parent("div").show(200);
-            else $(".custom-file").parent("div").hide(200);
-        });
-        function getModules(){
-            var branchId = parseInt($("#branch").children("option:selected").val());
-            var semesterId = parseInt($("#semester").children("option:selected").val());
-            $("#module").html(null);
-            if(branchId > 0 && semesterId > 0){
-                console.log(branchId,semesterId);
-                $.get('<?= ROOT."modules/jsonModulesByBranchAndSemester/" ?>'+branchId+"/"+semesterId, function(data, status){
-                    if(status == "success"){
-                        let str = "<option value='0'></option>";
-                        $.each(data,function(i,e){
-                            str += "<option value='"+e.module_id+"'>"+e.module+"</option>"
+                    $.each(x,function(i,e){
+                        e.value = e.value[0];
+                        var $optGrp = $('<optgroup />', {
+                            label: e.name
                         });
-                        $("#module").html(str);
-                    }
-                });
-            }
+                        $.each(e.value,function(i1,e1){
+                            var $opt = $('<option />', {
+                                value: e1.id,
+                                text: "S "+e1.semester
+                            });
+                            $optGrp.append($opt);
+                        });
+                        $select.append($optGrp).multipleSelect('refresh');
+                    });
+                }
+            });
         }
     });
 </script>

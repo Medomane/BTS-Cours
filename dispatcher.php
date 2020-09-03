@@ -10,15 +10,14 @@ class Dispatcher
     {
         $this->request = new Request();
         Router::parse($this->request->url, $this->request);
-        if(strpos($this->request->url,"json") === false){
-            if($this->request->controller != 'auths') Hook::Check();
-        }
+        Hook::Check($this->request);
         $controller = $this->loadController();
         $class_methods = get_class_methods($controller);
         if(in_array($this->request->action,$class_methods)) call_user_func_array([$controller, $this->request->action], $this->request->params);
         else {
-            if(in_array("index",$class_methods)) Func::Redirect($this->request->controller);
-            else Func::Redirect("home");
+            $controller->e404("This page doesn't exit !!!");
+            /*if(in_array("index",$class_methods)) Func::Redirect($this->request->controller);
+            else Func::Redirect("home");*/
         }
     }
 

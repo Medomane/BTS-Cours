@@ -5,7 +5,7 @@
 
     <meta name="viewport" content="width=device-width, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0"/>
 
-    <link rel="stylesheet" type="text/css" href='<?= WEBROOT."CSS/style.css" ?>'/>
+    <link rel="stylesheet" type="text/css" href='<?= WEBROOT."css/style.css" ?>'/>
 
     <link rel="stylesheet" type="text/css" href='<?= WEBROOT."node_modules/bootstrap/dist/css/bootstrap.css" ?>'/>
     <link rel="stylesheet" type="text/css" href='<?= WEBROOT."node_modules/@fortawesome/fontawesome-free/css/all.css" ?>'/>
@@ -18,8 +18,8 @@
     <script type="text/javascript" src='<?=WEBROOT."node_modules/sweetalert2/dist/sweetalert2.js" ?>'></script>
     <script type="text/javascript" src='<?= WEBROOT."node_modules/multiple-select/dist/multiple-select.min.js" ?>'></script>
 
-    <script type="text/javascript" src='<?=WEBROOT."JS/JavaScript.js" ?>'></script>
-    <script type="text/javascript" src='<?=WEBROOT."JS/SweetAlert.js" ?>'></script>
+    <script type="text/javascript" src='<?=WEBROOT."js/JavaScript.js" ?>'></script>
+    <script type="text/javascript" src='<?=WEBROOT."js/SweetAlert.js" ?>'></script>
 </head>
 
 <body>

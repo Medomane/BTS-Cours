@@ -33,29 +33,28 @@
                     <th><input type="text" class="form-control" placeholder="Uploader" disabled></th>
                     <th><input type="text" class="form-control" placeholder="Module" disabled></th>
                     <th><input type="text" class="form-control" placeholder="Branch" disabled></th>
-                    <th><input type="text" class="form-control" placeholder="Establishment" disabled></th>
                     <th><input type="text" class="form-control" placeholder="Unity" disabled></th>
                     <th><input type="text" class="form-control" placeholder="Semester" disabled></th>
-                    <th>#</th>
+                    <?php if(AuthUser::IsAdministrator()){ ?>
+                    <th>Action</th>
+                    <?php } ?>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach($files as $k => $v){ ?>
                     <tr>
-                        <td><i><b><?= pathinfo($v["Path"], PATHINFO_BASENAME) ?></b></i></td>
-                        <td><?= $v["Uploader"] ?></td>
-                        <td><?= $v["Module"] ?></td>
-                        <td><?= $v["Branch"] ?></td>
-                        <td><?= $v["Establishment"] ?></td>
-                        <td><?= $v["Unity"] ?></td>
-                        <td><?= $v["Semester"] ?></td>
-                        <td style="<?= (AuthUser::IsAdministrator())?'width:128px;':'' ?>">
-                            <a target="_blank" href="<?= WEBROOT."uploads/".$v["Path"] ?>" class="btn btn-dark"><i class="fas fa-file-download" title="Download file"></i></a>
-                            <?php if(AuthUser::IsAdministrator()){ ?>
-                                <div onclick="editFile('<?= ROOT.'files/confirmed/'.$v['id'] ?>',$(this))" class="btn btn-light" title="<?= intval($v["confirmed"])==0?'Confirm':'Annul'?>"><i class="fa <?= intval($v["confirmed"])==0?'fa-check-circle':'fa-minus-circle'?>"></i></div>
-                                <div onclick="editFile('<?= ROOT.'files/delete/'.$v['id'] ?>',$(this))" class="btn btn-danger" title="Delete"><i class="fa fa-trash-alt"></i></div>
-                            <?php } ?>
+                        <td><i><b><a title="<?= $v["uploadedAt"] ?>" target="_blank" href="<?= WEBROOT."uploads/".$v["path"] ?>"><?= pathinfo($v["path"], PATHINFO_BASENAME) ?></a></b></i></td>
+                        <td><a href='<?= ROOT."users/profile/".$v["user_id"] ?>'><?= $v["firstName"]." ".$v["lastName"] ?></a></td>
+                        <td><?= $v["module"] ?></td>
+                        <td><?= $v["branch"] ?></td>
+                        <td><?= $v["unity"] ?></td>
+                        <td style="width:90px;"><?= $v["semester"] ?></td>
+                        <?php if(AuthUser::IsAdministrator()){ ?>
+                        <td style="width:90px;">
+                            <div onclick="editFile('<?= ROOT.'files/confirmed/'.$v['id'] ?>',$(this))" class="btn btn-light" title="<?= intval($v["confirmed"])==0?'Confirm':'Annul'?>"><i class="fa <?= intval($v["confirmed"])==0?'fa-check-circle':'fa-minus-circle'?>"></i></div>
+                            <div onclick="editFile('<?= ROOT.'files/delete/'.$v['id'] ?>',$(this))" class="btn btn-danger" title="Delete"><i class="fa fa-trash-alt"></i></div>
                         </td>
+                        <?php } ?>
                     </tr>
                 <?php } ?>
             </tbody>

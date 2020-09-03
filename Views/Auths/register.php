@@ -68,7 +68,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="module">Module semesters</label>
+                            <label for="module">Modules</label>
                             <select multiple="multiple" name="module[]" id="module" style="width:100%;">
                                 
                             </select>
@@ -133,12 +133,13 @@
                         filter: true,
                         filterGroup: true
                     });
-                    $.get('<?= ROOT."modules/jsonUnusedModulesByEstablishment/" ?>'+establishmentId, function(data, status){
+                    var dt = {establishment_id:establishmentId,user_id:0};
+                    $.post('<?= ROOT."modules/jsonModules" ?>',dt, function(data, status){
                         if(status == "success"){
                             var x = {};
                             for (var i = 0; i < data.length; ++i) {
                                 var obj = data[i];
-                                let key = '('+obj.branch.split('-')[0].trim()+') '+obj.module;
+                                let key = '('+obj.abbreviated+') '+obj.module;
                                 if (x[key] === undefined) x[key] = {name:key,value:[]};
                                 let tmp = data.filter(function(e){
                                     return e.module_id === obj.module_id; 
@@ -170,7 +171,7 @@
                         if(status == "success"){
                             let str = "<option value='0'></option>";
                             $.each(data,function(i,e){
-                                str += "<option value='"+e.id+"'>"+e.Branch+"</option>"
+                                str += "<option value='"+e.id+"'>"+e.branch+"</option>"
                             });
                             $("#branch").html(str);
                         }
@@ -234,7 +235,6 @@
                     $(".fa-stroopwafel").parent("button").attr("disabled","disabled");
                     $.post('<?= ROOT."auths/jsonRegister" ?>', $('#form').serialize(),function(data,status){
                         if(status == "success"){
-                            console.log(data);
                             if(data.message !== "success"){
                                 Swal.fire(
                                     'Error',

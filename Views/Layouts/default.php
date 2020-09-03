@@ -5,14 +5,14 @@
 
     <meta name="viewport" content="width=device-width, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0"/>
 
-    <link rel="stylesheet" type="text/css" href='<?= WEBROOT."CSS/style.css" ?>'/>
+    <link rel="stylesheet" type="text/css" href='<?= WEBROOT."css/style.css" ?>'/>
 
     <link rel="stylesheet" type="text/css" href='<?= WEBROOT."node_modules/bootstrap/dist/css/bootstrap.css" ?>'/>
     <link rel="stylesheet" type="text/css" href='<?= WEBROOT."node_modules/@fortawesome/fontawesome-free/css/all.css" ?>'/>
     <link rel="stylesheet" type="text/css" href='<?= WEBROOT."node_modules/sweetalert2/dist/sweetalert2.css" ?>'/>
     <link rel="stylesheet" type="text/css" href='<?= WEBROOT."node_modules/charts/dist/Chart.css" ?>'/>
     <link rel="stylesheet" type="text/css" href='<?= WEBROOT."node_modules/multiple-select/dist/multiple-select.min.css" ?>'>
-    <link rel="stylesheet" type="text/css" href='<?= WEBROOT."CSS/sideBar.css" ?>'/>
+    <link rel="stylesheet" type="text/css" href='<?= WEBROOT."css/sideBar.css" ?>'/>
 
     <script type="text/javascript" src='<?=WEBROOT."node_modules/jquery/dist/jquery.js" ?>'></script>
     <script type="text/javascript" src='<?=WEBROOT."node_modules/popper.js/dist/popper.js" ?>'></script>
@@ -21,9 +21,9 @@
     <script type="text/javascript" src='<?=WEBROOT."node_modules/charts/dist/Chart.js" ?>'></script>
     <script type="text/javascript" src='<?= WEBROOT."node_modules/multiple-select/dist/multiple-select.min.js" ?>'></script>
 
-    <script type="text/javascript" src='<?=WEBROOT."JS/JavaScript.js" ?>'></script>
-    <script type="text/javascript" src='<?=WEBROOT."JS/SweetAlert.js" ?>'></script>
-    <script type="text/javascript" src='<?=WEBROOT."JS/sideBar.js" ?>'></script>
+    <script type="text/javascript" src='<?=WEBROOT."js/JavaScript.js" ?>'></script>
+    <script type="text/javascript" src='<?=WEBROOT."js/SweetAlert.js" ?>'></script>
+    <script type="text/javascript" src='<?=WEBROOT."js/sideBar.js" ?>'></script>
 </head>
 
 <body>
@@ -35,15 +35,14 @@
                 </div>
                 <div class="sidebar-header">
                     <div class="user-pic">
-                        <img src='<?=WEBROOT."img/".AuthUser::Get()["gender"].".png" ?>' alt="Avatar">
+                        <a href='<?= ROOT."users/profile" ?>'>
+                            <img src='<?=WEBROOT."img/".AuthUser::Get()["gender"].".png" ?>' alt="Avatar">
+                        </a>
                     </div>
                     <div class="user-info">
                         <span class="user-name"><?= AuthUser::Get()["firstName"] ?> <strong><?= AuthUser::Get()["lastName"] ?></strong></span>
                         <span class="user-role"><?= intval(AuthUser::Get()["role"])==0?"Administrator":"User"; ?></span>
-                        <span class="user-status">
-                            <i class="fa fa-envelope"></i>
-                            <span><?= AuthUser::Get()["email"] ?></span>
-                        </span>
+                        <span class="user-status active"><?= ucfirst(AuthUser::Get()["type"]) ?></span>
                     </div>
                 </div>
                 <div class="sidebar-menu" runat="server" id="sidebarItems">
@@ -60,6 +59,9 @@
                                 <ul>
                                     <li>
                                         <a href="<?= ROOT."home" ?>">Index</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= ROOT."home/info" ?>">Information</a>
                                     </li>
                                 </ul>
                             </div>
@@ -101,7 +103,7 @@
             </div>
             <div class="sidebar-footer">
                 <?php if(AuthUser::IsAdministrator()){ ?>
-                    <?php $nbr = count(Model::Get("SELECT id FROM user WHERE activated = 0"));?>
+                    <?php $nbr = count((new Model())->Get("SELECT id FROM user WHERE activated = 0"));?>
                     <a href="<?= ROOT."users/customize" ?>" title="<?= "You have ".$nbr." user".(($nbr > 1)?"s":"")." to verify." ?>">
                         <i class="fa fa-bell"></i>
                         <?php ;echo $nbr > 0?'<span class="badge badge-pill badge-warning notification">'.$nbr.'</span>':'';?>
@@ -116,7 +118,13 @@
                 </a>
             </div>
         </nav>
-        <main class="page-content">
+        <main class="page-content" style="
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+">
             <nav class="navbar navbar-dark bg-dark">
                 <div class="btn btn-dark" id="toggle-sidebar"><i class="fas fa-times"></i></div>
                 <div>

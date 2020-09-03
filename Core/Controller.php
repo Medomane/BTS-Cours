@@ -20,48 +20,30 @@
             $this->vars = array_merge($this->vars, $d);
         }
 
-        function render($filename)
+        function render($view)
         {
             extract($this->vars);
             ob_start();
-            require(DIR_ROOT . "Views/" . ucfirst(str_replace('Controller', '', get_class($this))) . '/' . $filename . '.php');
-            $content_for_layout = ob_get_clean();
-
-            if ($this->layout == false)
-            {
-                $content_for_layout;
-            }
-            else
-            {
-                require(DIR_ROOT . "Views/Layouts/" . $this->layout . '.php');
-            }
-        }
-
-        function autoRender()
-        {
-            extract($this->vars);
-            ob_start();
-            require(DIR_ROOT . "Views/" . ucfirst($this->request->controller) . '/' . $this->request->action . '.php');
+            if(strpos($view,'/')===0) $view = DIR_ROOT.'Views'.$view.'.php' ; 
+            else $view = DIR_ROOT . "Views/" . ucfirst($this->request->controller) . '/' . $view . '.php' ;
+            require($view);
             $content_for_layout = ob_get_clean();
             if ($this->layout == false) $content_for_layout;
             else require(DIR_ROOT . "Views/Layouts/" . $this->layout . '.php');
         }
 
-        /*private function secure_input($data)
+        function autoRender()
         {
-            $data = trim($data);
-            $data = stripslashes($data);
-            $data = htmlspecialchars($data);
-            return $data;
+            $this->render($this->request->action);
         }
 
-        protected function secure_form($form)
-        {
-            foreach ($form as $key => $value)
-            {
-                $form[$key] = $this->secure_input($value);
-            }
-        }*/
+        function e404($message){
+            header('HTTP/1.0 404 Not Found') ;
+            $d["message"] = $message;
+            $this->set($d) ;
+            $this->render('/errors/404') ;
+            die() ;
+        }
 
     }
 ?>

@@ -1,17 +1,16 @@
 <?php
 class filesController extends Controller
 {
-    function index()
-    {
+    function index(){
         $this->autoRender();
     }
     function upload(){
         $errors = array();
-        if(isset($_POST["branch"])){
+        if(isset($_POST["module"])){
             if(isset($_FILES["file"])){
                 $maxsize = 8 * 1024 * 1024;
                 $files = Func::getFiles($_FILES);
-                $folder=$_POST["establishment"].'/'.$_POST["branch"].'/'.$_POST["module"].'/'.$_POST["semester"]."/";
+                $folder=$_POST["module"]."/";
                 $dir = UPLOADS_DIR.$folder;
                 Func::make_dir($dir);
                 foreach($files as $k => $v){
@@ -27,7 +26,7 @@ class filesController extends Controller
                                 $FinalFilename = $filename.'.'.$extension;
                                 $FileCounter = 0;
                                 while (file_exists($dir.$FinalFilename)) $FinalFilename = $filename . '_' . $FileCounter++ . '.' . $extension;
-                                if(move_uploaded_file($v->tmp_name, $dir.$FinalFilename)) $this->model->create($folder.$FinalFilename,$_POST["semester"],$_POST["module"]);
+                                if(move_uploaded_file($v->tmp_name, $dir.$FinalFilename)) $this->model->create($folder.$FinalFilename,$_POST["module"]);
                                 else $errors[$k] = " - <strong>".$v->name."</strong> : Upload error !!!";
                             }
                         }
@@ -38,18 +37,17 @@ class filesController extends Controller
             }
         }
         if(count($errors) > 0) Notify::Set(implode("</br>",$errors),"warning");
-        $d['establishments'] = Model::Get("SELECT * FROM establishment");
-        $d['semesters'] = Model::Get("SELECT * FROM semester");
+        $d['branchs'] = $this->model->Get("SELECT * FROM branch");
         $this->set($d);
         $this->autoRender();
     }
     function download(){
-        $d['files'] = Model::Get('SELECT * FROM filesDetail'.(AuthUser::IsAdministrator()?'':' WHERE confirmed = 1'));
+        $d['files'] = $this->model->Get('SELECT * FROM files'.(AuthUser::IsAdministrator()?'':' WHERE confirmed = 1'));
         $this->set($d);
         $this->autoRender();
     }
     function delete($id){
-        $f = $this->model->Get("SELECT * FROM file WHERE id = '".$id."'")[0];
+        $f = $this->model->FindOne($id);
         $this->model->delete($id);
         $path = UPLOADS_DIR.$f["path"];
         if(file_exists($path)) unlink($path);
@@ -58,7 +56,7 @@ class filesController extends Controller
         $this->model->confirmed($id);
     }
     function jsonAll(){
-        $res = $this->model->Get("SELECT * FROM file");
+        $res = $this->model->FindAll();
         Func::ToJson($res);
     }
     function jsonChartAll($size=20){

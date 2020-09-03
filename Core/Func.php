@@ -1,8 +1,9 @@
 <?php 
 
 class Func{
-    public static function Redirect($url){
-        header("Location: ".ROOT.$url);
+    public static function redirect($url,$code = null){
+       if($code == 301) header("HTTP/1.1 301 Moved Permanently") ;
+       header("Location: ".ROOT.$url) ;
     }
     public static function getFiles($file,$name = "file"){
         $res = $file[$name];
@@ -48,6 +49,32 @@ class Func{
     }
     public static function make_dir( $path, $permissions = 0777 ) {
         return is_dir( $path ) || mkdir( $path, $permissions, true );
+    }
+    public static function debug($var){
+        $debug = debug_backtrace() ;
+        echo '<p>&nbsp;</p>
+        <p>
+          <a href="#" onclick="$(this).parent().next(\'ol\').slideToggle(); return false;">
+            <strong>'.$debug[0]['file'].'</strong>l.'.$debug[0]['line'].'
+          </a>
+        </p>' ;
+        echo '<ol style="display:none;">' ;
+        foreach($debug as $k=>$v){
+          if($k>0){
+            echo '<li><strong>'.$v['file'].'</strong> l . '.$v['line'].'</li>' ;
+          }
+        }
+        echo '</ol>' ;
+        echo '<pre>' ;
+        print_r($var) ;
+        echo '</pre>' ;
+        die() ;
+    }
+    
+    public static function dateNow(){
+      date_default_timezone_set('Africa/Casablanca') ;
+      setlocale(LC_TIME, 'French_Monaco') ;
+      return ucfirst(strftime("%A")).' le '.Date('d/m/Y').', à '.Date('H:i:s') ;
     }
 }
 
