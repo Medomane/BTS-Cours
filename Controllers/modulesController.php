@@ -3,7 +3,7 @@ class modulesController extends Controller
 {
     function jsonModules(){
         $data = $_POST;
-        $req = "SELECT * FROM `modulesdetail`";
+        $req = "SELECT * FROM `modulesDetail`";
         if(isset($data['cond']) && $data['cond'] !== '') $req .= ' WHERE '.$data['cond'];
         else{
             $req .= (count($data) > 0?' WHERE ':'');

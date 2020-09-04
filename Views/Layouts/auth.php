@@ -1,7 +1,7 @@
 <!doctype html>
 <head>
     <meta charset="UTF-8"/>
-    <title>Cours</title>
+    <title>BTS Courses</title>
 
     <meta name="viewport" content="width=device-width, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0"/>
 
