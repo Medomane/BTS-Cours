@@ -109,7 +109,7 @@
                         <?php ;echo $nbr > 0?'<span class="badge badge-pill badge-warning notification">'.$nbr.'</span>':'';?>
                     </a>
                 <?php } ?>
-                <a href="#">
+                <a href="<?= ROOT."users/edit" ?>">
                     <i class="fa fa-cog"></i>
                     <span class="badge-sonar"></span>
                 </a>

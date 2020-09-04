@@ -13,7 +13,7 @@ class Notify{
     public static function getHTML(){
         $tmp =Notify::Get();
         if($tmp != null && isset($tmp)){
-            return $tmp->toString();
+            return $tmp->toString();    
         }
         return "";
     }

@@ -6,18 +6,19 @@ class authsController extends Controller
         if(isset($_POST["submit"])){
             $email = Form::SecureInput($_POST["email"]);
             $password = Form::SecureInput($_POST["password"]);
-            $res = (new Model())->Get("SELECT * FROM user WHERE email = \"".$email."\" AND password = \"".md5($password)."\"");
+            $res = (new Model())->Get("SELECT * FROM users WHERE email = \"".$email."\" AND password = \"".md5($password)."\"");
             if(count($res) > 0){
                 $user = $res[0];
                 if(intval($user["activated"]) === 0){
                     Notify::Set("Your account is not activated !!!","warning");
-                    return false;
                 }
-                $path = WEBROOT."img/avatars/".$user["id"].".png";
-                if(!file_exists($path)) $path = WEBROOT."img/".$user["gender"].".png";
-                $user["avatar"] = $path;
-                AuthUser::Set($user);
-                Func::Redirect(ROOT."home");
+                else{
+                    $path = WEBROOT."img/avatars/".$user["id"].".png";
+                    if(!file_exists($path)) $path = WEBROOT."img/".$user["gender"].".png";
+                    $user["avatar"] = $path;
+                    AuthUser::Set($user);
+                    Func::Redirect(ROOT."home");
+                }
             }
             else Notify::Set("User not found !!!","warning");
             $d['email'] = $email;

@@ -33,9 +33,7 @@
                         <div class="form-group">
                             <label for="password">Password</label>
                             <input type="password" autocomplete name="password" class="form-control" id="password" placeholder="Password" required>
-                            <div class="valid-feedback">
-                                
-                            </div>
+                            <div class="valid-feedback"></div>
                         </div>
                         <div class="form-group">
                             <label for="passwordVer">Retype password</label>

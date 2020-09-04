@@ -37,5 +37,46 @@ class usersController extends Controller
     function activated($id){
         $this->model->activated($id);
     }
+    function edit(){
+        if(count($_POST) > 0){
+            $msg = new stdClass();
+            $msg->message = 'success';
+            try{
+                $req = "UPDATE user SET firstName = \"".Form::SecureInput($_POST['firstName'])."\", lastName = \"".Form::SecureInput($_POST['lastName'])."\", establishment_id = ".$_POST["establishment"];
+                $password = Form::SecureInput($_POST['password']);
+                if($password !== '') $req .= ", password = \"".md5($password)."\"";
+                if(AuthUser::Get()["type"] === 'student') $req .= ", semester_id = ".$_POST['semester'].", lineBranch_id = ".$_POST['branch'];
+                $req = $req." WHERE id = ".AuthUser::Get()["id"];
+                $this->model->Exec($req);
+                $user = AuthUser::Get();
+                $user["firstName"] = Form::SecureInput($_POST['firstName']);
+                $user["lastName"] = Form::SecureInput($_POST['lastName']);
+                $user["establishment_id"] = $_POST["establishment"];
+                if(AuthUser::Get()["type"] === 'student'){
+                    $user["semester_id"] = $_POST['semester'];
+                    $user["lineBranch_id"] = $_POST['branch'];
+                }
+                AuthUser::Set($user);
+                if(AuthUser::Get()["type"] === 'professor'){
+                    $this->model->Exec("DELETE FROM lineTeaching WHERE user_id = ".AuthUser::Get()["id"]);
+                    foreach($_POST["module"] as $k){
+                        $resT = $this->model->Get("SELECT * FROM lineTeaching WHERE user_id = ".AuthUser::Get()["id"]." AND lineModule_id = ".$k." AND establishment_id = ".$_POST["establishment"]);
+                        if(count($resT) <= 0){
+                            $this->model->Exec("INSERT INTO lineTeaching (user_id,lineModule_id,establishment_id) values 
+                            (".AuthUser::Get()["id"].",".$k.",".$_POST["establishment"].")");
+                        }
+                    }
+                }
+            }
+            catch(Exception $ex){
+                $msg->message = $ex->getMessage();
+            }
+            Func::ToJson($msg);
+        }
+        $d["establishments"] = $this->model->Get("SELECT * FROM establishment");
+        if(AuthUser::Get()["type"] === 'student') $d["semesters"] = $this->model->Get("SELECT * FROM semester");
+        $this->set($d);
+        $this->autoRender();
+    }
 }
 ?>

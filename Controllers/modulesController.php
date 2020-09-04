@@ -3,9 +3,18 @@ class modulesController extends Controller
 {
     function jsonModules(){
         $data = $_POST;
-        $req = "SELECT * FROM `modulesdetail`".(count($_POST) > 0?' WHERE ':'');
-        foreach($data as $k => $v) $req .= $k." = ".Form::SecureInput($v).' AND ';
-        $res = $this->model->Get(rtrim(rtrim($req,' '),'AND'));
+        $req = "SELECT * FROM `modulesdetail`";
+        if(isset($data['cond']) && $data['cond'] !== '') $req .= ' WHERE '.$data['cond'];
+        else{
+            $req .= (count($data) > 0?' WHERE ':'');
+            foreach($data as $k => $v) {
+                if($k !== "type"){
+                    $req .= $k." = ".Form::SecureInput($v).' '.(isset($data["type"])?$data["type"]:' AND ').' ';
+                }
+            }
+            $req = rtrim(rtrim($req,' '),(isset($data["type"])?$data["type"]:'AND'));
+        }
+        $res = $this->model->Get($req);
         Func::ToJson($res);
     }
     function jsonModulesByBranch($branchId){
