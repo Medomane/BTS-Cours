@@ -4,7 +4,7 @@
     <title>BTS Courses</title>
 
     <meta name="viewport" content="width=device-width, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0"/>
-
+    <link rel="shortcut icon" href='<?= ROOT."favicon.ico" ?>' type="image/x-icon">
     <link rel="stylesheet" type="text/css" href='<?= WEBROOT."css/style.css" ?>'/>
 
     <link rel="stylesheet" type="text/css" href='<?= WEBROOT."node_modules/bootstrap/dist/css/bootstrap.css" ?>'/>
@@ -12,6 +12,8 @@
     <link rel="stylesheet" type="text/css" href='<?= WEBROOT."node_modules/sweetalert2/dist/sweetalert2.css" ?>'/>
     <link rel="stylesheet" type="text/css" href='<?= WEBROOT."node_modules/charts/dist/Chart.css" ?>'/>
     <link rel="stylesheet" type="text/css" href='<?= WEBROOT."node_modules/multiple-select/dist/multiple-select.min.css" ?>'>
+    <link rel="stylesheet" type="text/css" href='<?= WEBROOT."node_modules/jquery.fancytree/dist/skin-win8/ui.fancytree.min.css" ?>'>
+    <link rel="stylesheet" type="text/css" href='<?= WEBROOT."css/bstreeview.min.css" ?>'>
     <link rel="stylesheet" type="text/css" href='<?= WEBROOT."css/sideBar.css" ?>'/>
 
     <script type="text/javascript" src='<?=WEBROOT."node_modules/jquery/dist/jquery.js" ?>'></script>
@@ -20,6 +22,8 @@
     <script type="text/javascript" src='<?=WEBROOT."node_modules/sweetalert2/dist/sweetalert2.js" ?>'></script>
     <script type="text/javascript" src='<?=WEBROOT."node_modules/charts/dist/Chart.js" ?>'></script>
     <script type="text/javascript" src='<?= WEBROOT."node_modules/multiple-select/dist/multiple-select.min.js" ?>'></script>
+    <script type="text/javascript" src='<?= WEBROOT."node_modules/jquery.fancytree/dist/jquery.fancytree-all-deps.min.js" ?>'></script>
+    <script type="text/javascript" src='<?= WEBROOT."js/bstreeview.min.js" ?>'></script>
 
     <script type="text/javascript" src='<?=WEBROOT."js/JavaScript.js" ?>'></script>
     <script type="text/javascript" src='<?=WEBROOT."js/SweetAlert.js" ?>'></script>
@@ -118,15 +122,12 @@
                 </a>
             </div>
         </nav>
-        <main class="page-content" style="
-    position: absolute;
-    top: 0px;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-">
+        <main class="page-content" style="position: absolute;top: 0px;bottom: 0px;left: 0px;right: 0px;">
             <nav class="navbar navbar-dark bg-dark">
-                <div class="btn btn-dark" id="toggle-sidebar"><i class="fas fa-times"></i></div>
+                <div>
+                    <div class="btn btn-dark" id="toggle-sidebar"><i class="fas fa-times"></i></div>
+                    <button class="btn btn-dark" title="Refresh data" id="btn-sync" style="display: none;"><i class="fas fa-sync"></i></button>
+                </div>
                 <div>
                     <a href="<?= ROOT."files/upload" ?>" class="btn btn-dark"><i class="fas fa-file-upload" title="Upload files"></i></a>
                     <a href="<?= ROOT."files/download" ?>" class="btn btn-dark float-right"><i class="fas fa-file-download" title="Download files"></i></a>
