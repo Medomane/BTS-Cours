@@ -28,6 +28,7 @@
     <script type="text/javascript" src='<?=WEBROOT."js/JavaScript.js" ?>'></script>
     <script type="text/javascript" src='<?=WEBROOT."js/SweetAlert.js" ?>'></script>
     <script type="text/javascript" src='<?=WEBROOT."js/sideBar.js" ?>'></script>
+    <script type="text/javascript" src='<?=WEBROOT."js/gsap.js" ?>'></script>
 </head>
 
 <body>

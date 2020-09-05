@@ -10,7 +10,7 @@ class usersController extends Controller
         $this->autoRender();
     }
     function profile($id=null){
-        $id = ($id==null && !is_numeric($id))?$id = AuthUser::Get()["id"]:$id;
+        $id = ($id==null || !is_numeric($id))?$id = AuthUser::Get()["id"]:$id;
         $user = $this->model->Get("SELECT * FROM `users` WHERE id = ".$id.(AuthUser::IsAdministrator()?'':' AND activated = 1'));
         if(count($user) > 0){
             $user = $user[0];
