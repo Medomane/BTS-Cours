@@ -3,6 +3,11 @@ class authsController extends Controller
 {
     function index(){
         $this->layout = "auth";
+        $this->autoRender();
+    }
+
+    function login(){
+        $this->layout = "auth";
         if(isset($_POST["submit"])){
             $email = Form::SecureInput($_POST["email"]);
             $password = Form::SecureInput($_POST["password"]);

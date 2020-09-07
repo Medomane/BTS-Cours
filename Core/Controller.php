@@ -44,6 +44,9 @@
             $this->render('/errors/404') ;
             die() ;
         }
+        function first(){
+            echo "sdfv";
+        }
 
     }
 ?>

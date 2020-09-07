@@ -15,7 +15,8 @@ class Dispatcher
         $class_methods = get_class_methods($controller);
         if(in_array($this->request->action,$class_methods)) call_user_func_array([$controller, $this->request->action], $this->request->params);
         else {
-            $controller->e404("This page doesn't exit !!!");
+            if(AuthUser::IsAthenticated()) $controller->e404("This page doesn't exit !!!");
+            else Func::redirect("auths/login");
             /*if(in_array("index",$class_methods)) Func::Redirect($this->request->controller);
             else Func::Redirect("home");*/
         }

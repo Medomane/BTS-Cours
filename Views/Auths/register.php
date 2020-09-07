@@ -1,4 +1,12 @@
-<table style="position:absolute;top:0px;left:0px;right:0px;bottom:0px;width:100%;height:100%;">
+<div style="position:absolute;top:0px;width:100%;height:80%;">
+<nav class="navbar navbar-dark bg-dark">
+    <a href='<?= ROOT.'/auths' ?>' class="btn btn-dark"><i class="fas fa-home"></i></a>
+    <div>
+        <a href="<?= ROOT."auths/login" ?>" class="btn btn-dark"><i class="fas fa-sign-in-alt" title="login"></i></a>
+        <a href="<?= ROOT."auths/register" ?>" class="btn btn-dark float-right"><i class="fas fa-user-plus" title="signup"></i></a>
+    </div>
+</nav>
+<table style="margin:auto;height:100%;">
     <tr>
         <td style="vertical-align:middle">
             <div class="p-2">
@@ -6,50 +14,52 @@
                     <img src='<?=WEBROOT."img/users.png" ?>' alt="users" class="w-100 h-100">
                 </div>
                 <div style="max-width: 400px;margin:auto;"><?= Notify::getHTML(); ?></div>
-                <form method="POST" style="margin:auto;max-width: 400px" id="form">
-                    <div class="old">
-                        <div class="form-group">
+                <form method="POST" id="form" class="col-md-6 m-auto">
+                    <div class="old row">
+                        <div class="form-group col-md-6">
                             <label for="firstName">First name</label>
                             <input type="text" name="firstName" class="form-control" id="firstName" placeholder="First name" required>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group col-md-6">
                             <label for="lastName">Last name</label>
                             <input type="text" name="lastName" class="form-control" id="lastName" placeholder="Last name" required>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group col-md-6">
                             <label for="email">Email address</label>
                             <input type="email" name="email" class="form-control" id="email" placeholder="Enter email" required>
                             <div class="valid-feedback">
                                 
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group col-md-6">
                             <label for="gender">Gender</label>
                             <select name="gender" required class="form-control" id="gender">
                                 <option value="0">Male</option>
                                 <option value="1">Female</option>
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group col-md-6">
                             <label for="password">Password</label>
                             <input type="password" autocomplete name="password" class="form-control" id="password" placeholder="Password" required>
                             <div class="valid-feedback"></div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group col-md-6">
                             <label for="passwordVer">Retype password</label>
-                            <input type="password" autocomplete name="passwordVer" class="form-control" id="passwordVer" required>
+                            <input type="password" placeholder="password" autocomplete name="passwordVer" class="form-control" id="passwordVer" required>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-next">Next <i class="fas fa-arrow-right"></i></button>
+                        <div class="form-group col-md-6">
+                            <button type="submit" class="btn btn-primary btn-next">Next <i class="fas fa-arrow-right"></i></button>
+                        </div>
                     </div>
-                    <div class="next">
-                        <div class="form-group">
+                    <div class="next row">
+                        <div class="form-group col-md-12">
                             <label for="type">Type</label>
                             <select name="type" required class="form-control" id="type">
                                 <option value="professor">Professor</option>
                                 <option value="student">Student</option>
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group col-md-12">
                             <label for="establishment">Establishment</label>
                             <select name="establishment" required class="form-control" id="establishment">
                                 <option value="0"></option>
@@ -59,19 +69,19 @@
                             </select>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group col-md-12">
                             <label for="branch">Branchs</label>
                             <select name="branch" class="form-control" id="branch">
                                 
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group col-md-12">
                             <label for="module">Modules</label>
                             <select multiple="multiple" name="module[]" id="module" style="width:100%;">
                                 
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group col-md-12">
                             <label for="semester">Semester</label>
                             <select name="semester" required class="form-control" id="semester">
                                 <?php foreach($semesters as $k => $v) : ?>
@@ -79,13 +89,13 @@
                                 <?php endforeach ?>
                             </select>
                         </div>
-                        <div>
+                        <div class="col-md-12">
                             <div class="btn btn-info btn-back"><i class="fas fa-arrow-left"></i> Back</div>
                             <div class="float-right">
                                 <button type="submit" name="submit" class="btn btn-primary">
                                     <i class="fas fa-stroopwafel fa-spin" style="display:none;"></i> Submit
                                 </button>
-                                Or <a href='<?= ROOT.'auths' ?>'>signIn</a>
+                                Or <a href='<?= ROOT.'auths/login' ?>'>signIn</a>
                             </div>
                         </div>
                     </div>
@@ -94,6 +104,7 @@
         </td>
     </tr>
 </table>
+</div>
 <script>
     $(function(){
         $('#module').multipleSelect({
@@ -107,8 +118,9 @@
         $('#branch').parent(".form-group").hide();
         $('.next').hide();
         $(".btn-back").click(function(){
-            $(".next").slideUp(200);
-            $(".old").slideDown(200);
+            $(".next").fadeOut(200,function(){
+                $(".old").fadeIn(200);
+            });
         });
         $("#type").change(function(){
             var selected = $(this).children("option:selected").val();
@@ -204,8 +216,9 @@
                         if(status === "success"){
                             if(data.message === "success"){
                                 $("#email").siblings(".valid-feedback").css("display","none");
-                                $(".next").slideDown(200);
-                                $(".old").slideUp(200);
+                                $(".old").fadeOut(200,function(){
+                                    $(".next").fadeIn(200);
+                                });
                             }
                             else $("#email").siblings(".valid-feedback").text(data.message+" !!!").css("display","block");
                         }
@@ -232,6 +245,7 @@
                     $(".fa-stroopwafel").css("display","inline-block");
                     $(".fa-stroopwafel").parent("button").attr("disabled","disabled");
                     $.post('<?= ROOT."auths/jsonRegister" ?>', $('#form').serialize(),function(data,status){
+                        console.log(data);
                         if(status == "success"){
                             if(data.message !== "success"){
                                 Swal.fire(
@@ -240,7 +254,7 @@
                                     'error'
                                 );
                             }
-                            else window.location = "<?= ROOT."auths" ?>";
+                            else window.location = "<?= ROOT."auths/login" ?>";
                         }
                         $(".fa-stroopwafel").css("display","none");
                         $(".fa-stroopwafel").parent("button").removeAttr("disabled");
