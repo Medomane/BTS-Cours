@@ -42,16 +42,17 @@ class usersController extends Controller
             $msg = new stdClass();
             $msg->message = 'success';
             try{
-                $req = "UPDATE user SET firstName = \"".Form::SecureInput($_POST['firstName'])."\", lastName = \"".Form::SecureInput($_POST['lastName'])."\", establishment_id = ".$_POST["establishment"];
+                $req = "UPDATE user SET firstName = \"".Form::SecureInput($_POST['firstName'])."\", lastName = \"".Form::SecureInput($_POST['lastName'])."\"";
                 $password = Form::SecureInput($_POST['password']);
                 if($password !== '') $req .= ", password = \"".md5($password)."\"";
+                if(AuthUser::Get()["type"] !== 'guest') $req .= ", establishment_id = ".$_POST["establishment"];
                 if(AuthUser::Get()["type"] === 'student') $req .= ", semester_id = ".$_POST['semester'].", lineBranch_id = ".$_POST['branch'];
                 $req = $req." WHERE id = ".AuthUser::Get()["id"];
                 $this->model->Exec($req);
                 $user = AuthUser::Get();
                 $user["firstName"] = Form::SecureInput($_POST['firstName']);
                 $user["lastName"] = Form::SecureInput($_POST['lastName']);
-                $user["establishment_id"] = $_POST["establishment"];
+                if(AuthUser::Get()["type"] !== 'guest') $user["establishment_id"] = $_POST["establishment"];
                 if(AuthUser::Get()["type"] === 'student'){
                     $user["semester_id"] = $_POST['semester'];
                     $user["lineBranch_id"] = $_POST['branch'];
@@ -73,9 +74,11 @@ class usersController extends Controller
             }
             Func::ToJson($msg);
         }
-        $d["establishments"] = $this->model->Get("SELECT * FROM establishment");
-        if(AuthUser::Get()["type"] === 'student') $d["semesters"] = $this->model->Get("SELECT * FROM semester");
-        $this->set($d);
+        if(AuthUser::Get()["type"] !== 'guest'){
+            $d["establishments"] = $this->model->Get("SELECT * FROM establishment");
+            if(AuthUser::Get()["type"] === 'student') $d["semesters"] = $this->model->Get("SELECT * FROM semester");
+            $this->set($d);
+        }
         $this->autoRender();
     }
 }

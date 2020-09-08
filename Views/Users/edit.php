@@ -1,4 +1,4 @@
-<form method="POST" id="form" style="height:100% !important;max-width:600px;margin:auto;" enctype="multipart/form-data">
+<form method="POST" id="form" style="max-width:600px;margin:auto;" enctype="multipart/form-data">
     <div style="max-width: 200px;max-height:200px;" class="m-auto">
         <img src='<?=WEBROOT."img/edit.png" ?>' alt="users" class="w-100 h-100">
     </div>
@@ -21,59 +21,64 @@
             <label for="passwordVer">Retype password</label>
             <input type="password" name="passwordVer" class="form-control" id="passwordVer" placeholder="Password">
         </div>
-        <div class="form-group col-12">
-            <label for="establishment">Establishment</label>
-            <select name="establishment" required class="form-control" id="establishment">
-                <?php foreach($establishments as $k => $v) : ?>
-                    <option value="<?= $v["id"] ?>" <?= (intval($v["id"]) === intval(AuthUser::Get()["establishment_id"])?'selected="selected"':'') ?>><?= $v["name"] ?></option>
-                <?php endforeach ?>
-            </select>
-        </div>
-        <?php if(AuthUser::Get()["type"] === "professor") : ?>
+        <?php if(AuthUser::Get()["type"] !== "guest") : ?>
             <div class="form-group col-12">
-                <label for="module">Modules</label>
-                <select multiple="multiple" name="module[]" id="module" style="width:100%;" required>
-                    
-                </select>
-            </div>
-        <?php else : ?>
-            <div class="form-group col-xs-12 col-md-6">
-                <label for="branch">Branchs</label>
-                <select name="branch" class="form-control" id="branch">
-                    
-                </select>
-            </div>
-            <div class="form-group col-xs-12 col-md-6">
-                <label for="semester">Semester</label>
-                <select name="semester" required class="form-control" id="semester">
-                    <?php foreach($semesters as $k => $v) : ?>
-                        <option value="<?= $v["id"] ?>" <?= (intval($v["id"]) === intval(AuthUser::Get()["semester_id"])?'selected="selected"':'') ?>><?= $v["semester"] ?></option>
+                <label for="establishment">Establishment</label>
+                <select name="establishment" required class="form-control" id="establishment">
+                    <?php foreach($establishments as $k => $v) : ?>
+                        <option value="<?= $v["id"] ?>" <?= (intval($v["id"]) === intval(AuthUser::Get()["establishment_id"])?'selected="selected"':'') ?>><?= $v["name"] ?></option>
                     <?php endforeach ?>
                 </select>
             </div>
+            <?php if(AuthUser::Get()["type"] === "professor") : ?>
+                <div class="form-group col-12">
+                    <label for="module">Modules</label>
+                    <select multiple="multiple" name="module[]" id="module" style="width:100%;" required>
+                        
+                    </select>
+                </div>
+            <?php else : ?>
+                <div class="form-group col-xs-12 col-md-6">
+                    <label for="branch">Branchs</label>
+                    <select name="branch" class="form-control" id="branch">
+                        
+                    </select>
+                </div>
+                <div class="form-group col-xs-12 col-md-6">
+                    <label for="semester">Semester</label>
+                    <select name="semester" required class="form-control" id="semester">
+                        <?php foreach($semesters as $k => $v) : ?>
+                            <option value="<?= $v["id"] ?>" <?= (intval($v["id"]) === intval(AuthUser::Get()["semester_id"])?'selected="selected"':'') ?>><?= $v["semester"] ?></option>
+                        <?php endforeach ?>
+                    </select>
+                </div>
+            <?php endif ?>
         <?php endif ?>
     </div>
     <button type="submit" name="submit" class="btn btn-primary"><i class="fas fa-check"></i> Validate</div>
 </form>
 <script>
     $(function(){
-        $('#module').multipleSelect({
-            multiple: true,
-            multipleWidth: 60,
-            selectAll: false,
-            filter: true,
-            filterGroup: true
-        });
-        $select = $("#module");
-        refreshModules();
-        $("#establishment").change(function(){
+        let type = '<?= AuthUser::Get()["type"] ?>';
+        let isGuest = type === "guest";
+        if(!isGuest){
+            $('#module').multipleSelect({
+                multiple: true,
+                multipleWidth: 60,
+                selectAll: false,
+                filter: true,
+                filterGroup: true
+            });
+            $select = $("#module");
             refreshModules();
-        });
+            $("#establishment").change(function(){
+                refreshModules();
+            });
+        }
         $("#form").submit(function(e){
             e.preventDefault();
             $("#form div.alert").fadeOut();
             let verified = true;
-            let type = '<?= AuthUser::Get()["type"] ?>';
             $.each($("#form .row input[type=text]"),function(i,e){
                 if(!$(this).attr('id')) return ;
                 if($(this).val().trim() == ''){
