@@ -100,8 +100,15 @@ section .section-title {
                                             WEBROOT."img/".$v["gender"].".png" ?>" alt="card image"></p>
                                         <h4 class="card-title"><a href="<?= ROOT.'users/profile/'.$v['id'] ?>" style="text-decoration: none;color:unset"><?= $v["firstName"]." ".$v["lastName"] ?></a></h4>
                                         <p class="card-text">
-                                        <?= $v["establishment"]?>
+                                            <?=($v['type'] !== "guest")? $v["establishment"]:$v["registredAt"]?>
                                         </p>
+                                        <?php if(AuthUser::IsAdministrator()){ ?>
+                                            </br>
+                                            <div>
+                                                <div onclick="editFile('<?= ROOT.'users/activated/'.$v['id'] ?>',$(this))" class="btn btn-warning btn-sm" title="<?= intval($v["activated"])==0?'Activate':'Deactivate'?>"><i class="fa <?= intval($v["activated"])==0?'fa-check-circle':'fa-minus-circle'?>"></i></div>
+                                                <div href="#" onclick="editFile('<?= ROOT.'users/delete/'.$v['id'] ?>',$(this))" class="btn btn-danger btn-sm" title="Delete"><i class="fa fa-trash-alt"></i></div>
+                                            </div>
+                                        <?php } ?>
                                         <?php if(AuthUser::IsAdministrator()){ ?>
                                             </br>
                                             <div>

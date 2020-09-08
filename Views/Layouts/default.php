@@ -100,6 +100,9 @@
                                     <li>
                                         <a href="<?= ROOT."users/index/student" ?>">Students</a>
                                     </li>
+                                    <li>
+                                        <a href="<?= ROOT."users/index/guest" ?>">Guests</a>
+                                    </li>
                                 </ul>
                             </div>
                         </li>

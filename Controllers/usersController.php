@@ -2,7 +2,7 @@
 class usersController extends Controller
 {
     function index($type=null){
-        $type = ($type === "student" || $type === "professor")?$type :"professor";
+        $type = ($type === "student" || $type === "professor" || $type === "guest")?$type :"professor";
         $res = $this->model->Get("SELECT * FROM users WHERE type = \"".$type."\" ".(AuthUser::IsAdministrator()?"":" AND activated = 1"));
         $d['type'] = $type;
         $d['users'] = $res;

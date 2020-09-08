@@ -13,8 +13,8 @@
                 <div style="max-width: 200px;max-height:200px;" class="m-auto">
                     <img src='<?=WEBROOT."img/users.png" ?>' alt="users" class="w-100 h-100">
                 </div>
-                <div style="max-width: 400px;margin:auto;"><?= Notify::getHTML(); ?></div>
-                <form method="POST" id="form" class="col-md-6 m-auto">
+                <div style="width:100%;;margin:auto;"><?= Notify::getHTML(); ?></div>
+                <form method="POST" id="form" style="max-width:600px;">
                     <div class="old row">
                         <div class="form-group col-md-6">
                             <label for="firstName">First name</label>
@@ -51,45 +51,48 @@
                             <button type="submit" class="btn btn-primary btn-next">Next <i class="fas fa-arrow-right"></i></button>
                         </div>
                     </div>
-                    <div class="next row">
-                        <div class="form-group col-md-12">
+                    <div class="next">
+                        <div class="form-group">
                             <label for="type">Type</label>
                             <select name="type" required class="form-control" id="type">
                                 <option value="professor">Professor</option>
                                 <option value="student">Student</option>
+                                <option value="guest">Guest</option>
                             </select>
                         </div>
-                        <div class="form-group col-md-12">
-                            <label for="establishment">Establishment</label>
-                            <select name="establishment" required class="form-control" id="establishment">
-                                <option value="0"></option>
-                                <?php foreach($establishments as $k => $v) : ?>
-                                    <option value="<?= $v["id"] ?>"><?= $v["name"] ?></option>
-                                <?php endforeach ?>
-                            </select>
-                        </div>
+                        <div class="next-attrs">
+                            <div class="form-group">
+                                <label for="establishment">Establishment</label>
+                                <select name="establishment" required class="form-control" id="establishment">
+                                    <option value="0"></option>
+                                    <?php foreach($establishments as $k => $v) : ?>
+                                        <option value="<?= $v["id"] ?>"><?= $v["name"] ?></option>
+                                    <?php endforeach ?>
+                                </select>
+                            </div>
 
-                        <div class="form-group col-md-12">
-                            <label for="branch">Branchs</label>
-                            <select name="branch" class="form-control" id="branch">
-                                
-                            </select>
+                            <div class="form-group">
+                                <label for="branch">Branchs</label>
+                                <select name="branch" class="form-control" id="branch">
+                                    
+                                </select>
+                            </div>
+                            <div class="form-group>
+                                <label for="module">Modules</label>
+                                <select multiple="multiple" name="module[]" id="module" style="width:100%;">
+                                    
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="semester">Semester</label>
+                                <select name="semester" required class="form-control" id="semester">
+                                    <?php foreach($semesters as $k => $v) : ?>
+                                        <option value="<?= $v["id"] ?>"><?= $v["semester"] ?></option>
+                                    <?php endforeach ?>
+                                </select>
+                            </div>
                         </div>
-                        <div class="form-group col-md-12">
-                            <label for="module">Modules</label>
-                            <select multiple="multiple" name="module[]" id="module" style="width:100%;">
-                                
-                            </select>
-                        </div>
-                        <div class="form-group col-md-12">
-                            <label for="semester">Semester</label>
-                            <select name="semester" required class="form-control" id="semester">
-                                <?php foreach($semesters as $k => $v) : ?>
-                                    <option value="<?= $v["id"] ?>"><?= $v["semester"] ?></option>
-                                <?php endforeach ?>
-                            </select>
-                        </div>
-                        <div class="col-md-12">
+                        <div class="pt-2">
                             <div class="btn btn-info btn-back"><i class="fas fa-arrow-left"></i> Back</div>
                             <div class="float-right">
                                 <button type="submit" name="submit" class="btn btn-primary">
@@ -124,6 +127,14 @@
         });
         $("#type").change(function(){
             var selected = $(this).children("option:selected").val();
+            if(selected === "professor" || selected === "student") {
+                $('.next-attrs').show();
+                $("#semester,#establishment").attr("required","required");
+            }
+            else {
+                $('.next-attrs').hide();
+                $("#semester,#establishment").removeAttr("required");
+            }
             $('#module').parent(".form-group").toggle(200);
             $('#semester').parent(".form-group").toggle(200);
             $('#branch').parent(".form-group").toggle(200);
@@ -228,19 +239,21 @@
             else{
                 let verified = true;
                 var type = $("#type").children("option:selected").val();
-                $.each($(".next select"),function(){
-                    if($(this).attr("id") !== "type"){
-                        let selected = $(this).val();
-                        if($(this).parent(".form-group").css("display") === "block"){
-                            let tmp = ($(this).attr("id") == "module")?selected.length >0:selected >0;
-                            if(tmp > 0) $(this).removeClass("is-invalid");
-                            else {
-                                $(this).addClass("is-invalid");
-                                verified = false;
+                if(type !== "guest"){
+                    $.each($(".next select"),function(){
+                        if($(this).attr("id") !== "type"){
+                            let selected = $(this).val();
+                            if($(this).parent(".form-group").css("display") === "block"){
+                                let tmp = ($(this).attr("id") == "module")?selected.length >0:selected >0;
+                                if(tmp > 0) $(this).removeClass("is-invalid");
+                                else {
+                                    $(this).addClass("is-invalid");
+                                    verified = false;
+                                }
                             }
                         }
-                    }
-                });
+                    });
+                }
                 if(verified === true){
                     $(".fa-stroopwafel").css("display","inline-block");
                     $(".fa-stroopwafel").parent("button").attr("disabled","disabled");

@@ -68,13 +68,15 @@ class authsController extends Controller
                     $vals .=  "\"".$val."\",";
                 }
             }
-            $cols .= "establishment_id,";
-            $vals .= "\"".Form::SecureInput($data["establishment"])."\",";
-            if($data["type"] === "student"){
-                $cols .= "lineBranch_id,";
-                $vals .= "\"".Form::SecureInput($data["branch"])."\",";
-                $cols .= "semester_id,";
-                $vals .= "\"".Form::SecureInput($data["semester"])."\",";
+            if($data["type"] !== "guest"){
+                $cols .= "establishment_id,";
+                $vals .= "\"".Form::SecureInput($data["establishment"])."\",";
+                if($data["type"] === "student"){
+                    $cols .= "lineBranch_id,";
+                    $vals .= "\"".Form::SecureInput($data["branch"])."\",";
+                    $cols .= "semester_id,";
+                    $vals .= "\"".Form::SecureInput($data["semester"])."\",";
+                }
             }
             $user_id = $this->model->Exec("INSERT INTO user (".rtrim($cols,',').") values (".rtrim($vals,',').")");
             if($data["type"] === "professor"){
@@ -91,9 +93,7 @@ class authsController extends Controller
         catch (Exception $e) {
             $res->message = $e->getMessage();
         }
-        header('Content-Type: application/json');
-        echo json_encode($res);
-        die();
+        Func::ToJson($res);
     }
 }
 ?>
