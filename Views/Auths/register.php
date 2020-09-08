@@ -1,3 +1,10 @@
+<style>
+    @media (max-width: 576px) {
+        #form{
+            min-width:302px !important;
+        }
+    }
+</style>
 <div style="position:absolute;top:0px;width:100%;height:80%;">
 <nav class="navbar navbar-dark bg-dark">
     <a href='<?= ROOT.'/auths' ?>' class="btn btn-dark"><i class="fas fa-home"></i></a>
@@ -14,7 +21,7 @@
                     <img src='<?=WEBROOT."img/users.png" ?>' alt="users" class="w-100 h-100">
                 </div>
                 <div style="width:100%;;margin:auto;"><?= Notify::getHTML(); ?></div>
-                <form method="POST" id="form" style="max-width:600px;">
+                <form method="POST" id="form" style="max-width:600px;min-width:326px;">
                     <div class="old row">
                         <div class="form-group col-md-6">
                             <label for="firstName">First name</label>
@@ -51,7 +58,7 @@
                             <button type="submit" class="btn btn-primary btn-next">Next <i class="fas fa-arrow-right"></i></button>
                         </div>
                     </div>
-                    <div class="next">
+                    <div class="next" style="display:none;">
                         <div class="form-group">
                             <label for="type">Type</label>
                             <select name="type" required class="form-control" id="type">
@@ -71,19 +78,19 @@
                                 </select>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group" style="display:none;">
                                 <label for="branch">Branchs</label>
                                 <select name="branch" class="form-control" id="branch">
                                     
                                 </select>
                             </div>
-                            <div class="form-group>
+                            <div class="form-group">
                                 <label for="module">Modules</label>
                                 <select multiple="multiple" name="module[]" id="module" style="width:100%;">
                                     
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="display:none;">
                                 <label for="semester">Semester</label>
                                 <select name="semester" required class="form-control" id="semester">
                                     <?php foreach($semesters as $k => $v) : ?>
@@ -117,9 +124,6 @@
             filter: true,
             filterGroup: true
         });
-        $('#semester').parent(".form-group").hide();
-        $('#branch').parent(".form-group").hide();
-        $('.next').hide();
         $(".btn-back").click(function(){
             $(".next").fadeOut(200,function(){
                 $(".old").fadeIn(200);
@@ -127,17 +131,24 @@
         });
         $("#type").change(function(){
             var selected = $(this).children("option:selected").val();
-            if(selected === "professor" || selected === "student") {
-                $('.next-attrs').show();
+            if(selected !== "guest") {
+                $('.next-attrs').slideDown(200);
                 $("#semester,#establishment").attr("required","required");
+                if(selected === "student"){
+                    $('#semester').parent(".form-group").show(200);
+                    $('#branch').parent(".form-group").show(200);
+                    $('#module').parent(".form-group").hide(200);
+                }
+                else{
+                    $('#semester').parent(".form-group").hide(200);
+                    $('#branch').parent(".form-group").hide(200);
+                    $('#module').parent(".form-group").show(200);
+                }
             }
             else {
-                $('.next-attrs').hide();
+                $('.next-attrs').slideUp(200);
                 $("#semester,#establishment").removeAttr("required");
             }
-            $('#module').parent(".form-group").toggle(200);
-            $('#semester').parent(".form-group").toggle(200);
-            $('#branch').parent(".form-group").toggle(200);
         });
         $("#establishment").change(function(){
             var establishmentId = parseInt($(this).children("option:selected").val());
@@ -258,7 +269,6 @@
                     $(".fa-stroopwafel").css("display","inline-block");
                     $(".fa-stroopwafel").parent("button").attr("disabled","disabled");
                     $.post('<?= ROOT."auths/jsonRegister" ?>', $('#form').serialize(),function(data,status){
-                        console.log(data);
                         if(status == "success"){
                             if(data.message !== "success"){
                                 Swal.fire(

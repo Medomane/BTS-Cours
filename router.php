@@ -6,7 +6,6 @@ class Router
     static public function parse($url, $request)
     {
         $url = trim($url);
-        //auths/index
         $explode_url = explode('/', $url);
         $explode_url = array_slice($explode_url, 2);
         if(empty($explode_url[0])) header("Location: " . ROOT . "home");
