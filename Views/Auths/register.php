@@ -143,6 +143,13 @@
                     $('#semester').parent(".form-group").hide(200);
                     $('#branch').parent(".form-group").hide(200);
                     $('#module').parent(".form-group").show(200);
+                    $('#module').multipleSelect({
+                        multiple: true,
+                        multipleWidth: 60,
+                        selectAll: false,
+                        filter: true,
+                        filterGroup: true
+                    });
                 }
             }
             else {
