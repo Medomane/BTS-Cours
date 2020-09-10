@@ -45,9 +45,9 @@
                         </a>
                     </div>
                     <div class="user-info">
-                        <span class="user-name"><?= AuthUser::Get()["firstName"] ?> <strong><?= AuthUser::Get()["lastName"] ?></strong></span>
-                        <span class="user-role"><?= intval(AuthUser::Get()["role"])==0?"Administrator":"User"; ?></span>
-                        <span class="user-status active"><?= ucfirst(AuthUser::Get()["type"]) ?></span>
+                        <span id="flname" class="user-name"><?= AuthUser::Get()["firstName"] ?> <strong><?= AuthUser::Get()["lastName"] ?></strong></span>
+                        <span  class="user-role"><?= intval(AuthUser::Get()["role"])==0?"Administrator":"User"; ?></span>
+                        <span  class="user-status active"><?= ucfirst(AuthUser::Get()["type"]) ?></span>
                     </div>
                 </div>
                 <div class="sidebar-menu" runat="server" id="sidebarItems">

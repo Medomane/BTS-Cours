@@ -55,7 +55,7 @@
             <?php endif ?>
         <?php endif ?>
     </div>
-    <button type="submit" name="submit" class="btn btn-primary"><i class="fas fa-check"></i> Validate</div>
+    <button id="btne" type="submit" name="submit" class="btn btn-primary"><i class="fas fa-check"></i> Validate</div>
 </form>
 <script>
     $(function(){
@@ -179,5 +179,13 @@
                 }
             }
         }
+    });
+    $(function(){
+        $("#btne").click(function(){
+            var fname = $("#firstName").val();
+            var lname = $("#lastName").val();
+            $("#flname").html(fname+" <strong>"+lname+"</strong>");
+
+        });
     });
 </script>
