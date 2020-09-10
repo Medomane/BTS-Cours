@@ -179,13 +179,10 @@
                 }
             }
         }
-    });
-    $(function(){
         $("#btne").click(function(){
             var fname = $("#firstName").val();
             var lname = $("#lastName").val();
             $("#flname").html(fname+" <strong>"+lname+"</strong>");
-
         });
     });
 </script>
